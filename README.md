@@ -18,3 +18,10 @@ among others, which are presented using attractive graphs.
 We created the project for 5 languages, namely, English, French, German, Russian and Arabic on the topic of "Refugee crisis in Europe".
 The data indexed gives a broader perspective to this topic by generating the summaries on the topics searched from Wikipedia, and 
 fetching relevant news articles from Guardian and NY Times.
+
+Collaborators :
+
+1. Jaideep Bhoosreddy @jaideepcoder
+2. Suhas Subaramanyam @suhassubramanyam
+3. Vinay Goyal @vinaygoyal
+4. Sunandan Barman @sunandanbarman
