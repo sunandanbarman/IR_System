@@ -25,3 +25,32 @@ Collaborators :
 2. Suhas Subaramanyam @suhassubramanyam
 3. Vinay Goyal @vinaygoyal
 4. Sunandan Barman @sunandanbarman
+
+Screenshots below :
+
+**Welcome screen**
+![welcome screen](../master/screenshots/IntroScreen.png?raw=true)
+This is the welcome screen for the user.
+
+**Search results**
+![Search results](../master/screenshots/SearchResults.png?raw=true)
+This is the search results shown to the user.
+List of features :
+
+1. Faceting based on langugage of tweet, Source of tweet, and verified/unverified users. ( See left sidebar )
+2. Fetching the summary from Wikipedia, uses the top entity found in Tweets data returned as part of search 
+3. Trending hashtags (both based on the whole corpus), and also from the found results
+4. Fetching top news articles from "The Guardian" on the searched topic
+5. Show the tweet in native twitter format, including support for Video, GIFs etc.
+
+**Word cloud and Content tagging**
+![Word cloud and Content tagging](../master/screenshots/WordCloudAndContentTag.png?raw=true)
+
+Shows the word cloud from the generated data, plus sentiment analysis of the results.
+Also shows the entities in each tweet along with the results
+
+**Time series graph**
+![More analysis graphs](../master/screenshots/GraphAnalysis.png?raw=true)
+
+Time series graph showing the rise/fall of the searched topic. Can be used to track the interest in a topic during
+a particular time period.
