@@ -1,0 +1,481 @@
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a href="#/home" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>s</b>C</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Social </b>Curry</span>
+  </a>
+
+  <!-- Header Navbar -->
+  <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+    </a>
+
+</nav>
+</header>
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <ul class="sidebar-menu">
+        <li class="header">HEADER</li>
+        <!-- Optionally, you can add icons to the links -->
+        <li class="active"><a href="#/home"><i class="fa fa-link"></i> <span>Dashboard</span></a></li>
+        <!-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li> -->
+        <!-- <li class="treeview">
+          <a><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a>Link in level 2</a></li>
+            <li><a>Link in level 2</a></li>
+            </ul>
+        </li> -->
+        <li class="header">FACET</li>
+        <!-- Optionally, you can add icons to the links -->
+        <li>
+          <a ng-init="hidelang=false" ng-click="hidelang = !hidelang" style="cursor:pointer"><i class="fa fa-link"></i> <span>Language</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <li style="margin-left:5%;margin-right:5%; width:90%;color:white;" ng-hide="hidelang" ng-repeat="(key, value) in facet['lang']">
+                <div class="checkbox"><label><input type="checkbox" ngTrueValue="key" ngFalseValue="" ng-model="lang[key]" ng-disabled="value == 0" ng-click="submit()">{{langMap[key]}} ({{value}})</label>
+                </div>
+            </li>
+        </li>
+        <li>
+          <a ng-init="hidesource=false" ng-click="hidesource = !hidesource" style="cursor:pointer"><i class="fa fa-link"></i> <span>Source</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <li style="margin-left:5%;margin-right:5%; width:90%;color:white;" ng-hide="hidesource" ng-repeat="(key, value) in facet['source'] | limitTo: 5">
+                <div class="checkbox"><label><input type="checkbox" ngTrueValue="key" ngFalseValue="" ng-model="source[key]" ng-disabled="value == 0" ng-click="submit()">{{parseSource(key)}} ({{value}})</label>
+                </div>
+            </li>
+        </li>
+        <li>
+          <a ng-init="hideverified=false" ng-click="hideverified = !hideverified" style="cursor:pointer"><i class="fa fa-link"></i> <span>Verified Users</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <li style="margin-left:5%;margin-right:5%; width:90%;color:white;" ng-hide="hideverified" ng-repeat="(key, value) in facet['users_verified'] | limitTo: 5">
+                <div class="checkbox"><label><input type="checkbox" ngTrueValue="key" ngFalseValue="" ng-model="verified[key]" ng-disabled="value == 0"  ng-click="submit()">{{verifiedMap[key]}} ({{value}})</label>
+                </div>
+            </li>
+        </li>
+        <!-- <li>
+          <a ng-init="hidefavorite=false" ng-click="hidefavorite = !hidefavorite" style="cursor:pointer"><i class="fa fa-link"></i> <span>Favorited Tweets</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <li ng-hide="hidefavorite" ng-repeat="(key, value) in facet['favorited'] | limitTo: 5" ng-click="submit()">
+                <div class="checkbox"><label><input type="checkbox" ngTrueValue="key" ngFalseValue="" ng-model="favorited[key]">{{favoriteMap[key]}} ({{value}})</label>
+                </div>
+            </li>
+        </li> -->
+        <li>
+          <a ng-init="hiderange=false" ng-click="hiderange = !hiderange" style="cursor:pointer"><i class="fa fa-link"></i> <span>Date Range</span> <i class="fa fa-angle-left pull-right"></i></a>
+          <input ng-hide="hiderange" style="margin-left:5%;margin-right:5%; width:90%;background-color:#374850;color:white;border-radius: 10px 10px 10px 10px; text-align:center;" date-range-picker class="form-control date-picker" type="text" ng-model="datePicker.date" min="'2015-11-24'" max="'2015-12-06'" ng-change="submit()"/>
+        </li>
+
+        
+</ul>
+<!-- /.sidebar-menu -->
+</section>
+<!-- /.sidebar -->
+</aside>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Social Curry
+        <small>Multilingual Social Analysis</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+  <!-- Your Page Content Here -->
+  <!-- <button ng-click="test()">Test</button>{{query}} -->
+  <div ng-show="!searchFlag">
+    <br><br><br><br><br><br><br><br><br><hr><br>
+  </div>
+  <uib-alert type="error">message</uib-alert>
+  <form id="query_form">
+      <div class="form-group input-group">
+        <input id="query" name="q" ng-model="query" ng-change="clear()" value="query" class="form-control input-lg" type="text" placeholder="Type your query...">
+        <submit type="submit" id="initial-submit" ng-click="submit()" class="input-group-addon btn btn-lg btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></submit>
+        <input type="submit" hidden ng-click="submit()">
+    </div>
+</form>
+<div ng-show="!searchFlag">
+    <br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="box" ng-show="searchFlag">
+            <div class="box-header with-border">
+                <h3 class="box-title">Results</h3>
+                <div class="box-tools pull-right">
+                    <small>Query time: <b>{{result['responseHeader']['QTime']}} milliseconds</b></small>
+                    <small>Relavent Tweets found: <b>{{result['response']['numFound']}}</b></small>
+                    <!-- Buttons, labels, and many other things can be placed here! -->
+                    <!-- Here is a label for example -->
+                    <!-- <span class="label label-primary">Label</span> -->
+                </div><!-- /.box-tools -->
+            </div><!-- /.box-header -->
+            <div class="box-body">
+              <div ng-hide="numberofPages == 0"  style="text-align:center">
+                    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="btn btn-primary">
+                        Previous
+                    </button>
+                    {{currentPage+1}}/{{numberOfPages()}}
+                    <button ng-disabled="currentPage >= result['response']['numFound']/pageSize - 1" ng-click="currentPage=currentPage+1"  class="btn btn-primary">
+                        Next
+                    </button>
+                </div>
+
+                <span ng-init="limit = 2;currentPage = 0;pageSize = 10;">
+                    <span ng-repeat="tweet in result['response']['docs'] | startFrom:currentPage*pageSize | limitTo:pageSize as tweets" ><!-- on-finish-render="ngRepeatFinished" -->
+                      <span ng-show="tweet.html == undefined">
+                        <blockquote class="twitter-tweet">{{getText(tweet.text)}}<br> - {{tweet.users_screen_name}} (<a href="{{'https://twitter.com/'+tweet.users_screen_name+'/status/'+tweet.id}}">{{getTimeago(tweet.created_at)}}</a>)
+                        </blockquote>
+                        <div>
+                          <p ng-show="tweet.docSentiment_type != 'null'" style="text-align:center"><b>Sentiment</b>: <span class="text-{{tweet.docSentiment_type=='positive' ? 'success': 'danger'}}">{{tweet.docSentiment_type | uppercase}} ({{tweet.docSentiment_score}})</span></p>
+                          <span ng-init="entities=getEntities(tweet)">
+                            <table class="table" ng-hide="entities.length==0" style="border-radius: 10px 10px 10px 10px;-webkit-box-shadow: 0px 0px 34px 0px rgba(52,119,219,1);
+-moz-box-shadow: 0px 0px 34px 0px rgba(52,119,219,1);
+box-shadow: 0px 0px 34px 0px rgba(52,119,219,1);">
+                              <thead>
+                                <tr >
+                                  <td><b>Entity</b></td>
+                                  <td><b>Type</b></td>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr ng-repeat="entity in entities">
+                                  <td><a href="{{entity.url}}" target="_blank">{{entity.text}}</a></td>
+                                  <!-- <td ng-show="entity.dbpedia == 'null'"><a href="http://en.wikipedia.org/wiki/{{entity.text.replace(' ', '_').replace('#', '').replace('@', '')}}" target="_blank">{{entity.text}}</a></td> -->
+                                  <td>{{entity.type}}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </span>
+                          
+                        </div>
+                      </span>
+                      <span ng-bind-html="tweet.html"  on-finish-render="ngRepeatFinished"></span><hr>
+                      <!-- // <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+                    </span>
+                </span>
+
+            </div><!-- /.box-body -->
+            <div class="box-footer" style="text-align:center">
+                <div ng-hide="numberofPages == 0">
+                    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="btn btn-primary">
+                        Previous
+                    </button>
+                    {{currentPage+1}}/{{numberOfPages()}}
+                    <button ng-disabled="currentPage >= result['response']['numFound']/pageSize - 1" ng-click="currentPage=currentPage+1"  class="btn btn-primary">
+                        Next
+                    </button>
+                </div>
+                <br>
+                <div><button  ng-init="showJSON = false"
+                    ng-click="showJSON = !showJSON"  class="btn btn-block btn-primary">show JSON</button>
+                    <pre ng-show="showJSON">
+                        {{result | json}}
+                    </pre>
+                </div>
+            </div><!-- box-footer -->
+        </div><!-- /.box -->
+    </div>
+
+    <div class="col-md-6">
+        <div class="col-md-6"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Top #HashTags (Global)</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <ol>
+                      <li ng-repeat="hashtag in result['trending_hashtags']" ng-click="searchHashTag(hashtag)"><a href>{{'#'+hashtag}}</a></li>
+                    </ol>
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                    <!-- The footer of the box -->
+                </div><!-- box-footer -->
+            </div><!-- /.box -->
+        </div>
+
+        <div class="col-md-6"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Top #HashTags (Results)</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <ol>
+                      <li ng-repeat="hashtag in facet['hashtags'] | filter: '![]'" ng-click="searchHashTag(hashtag)"><span ><a href>{{'#'+hashtag}}</a></span></li>
+                    </ol>
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                    <!-- The footer of the box -->
+                </div><!-- box-footer -->
+            </div><!-- /.box -->
+        </div>
+
+        <div class="col-md-12"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Summary</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body" ng-bind-html="summary">
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                  <a href="{{summaryURL}}" target="_blank">{{summaryTag}}</a>
+                </div><!-- box-footer -->
+            </div><!-- /.box -->
+        </div>
+
+        <div class="col-md-12"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">News (from Guardian)</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body" ng-init="currentGuardian=0">
+                  <div ng-hide="numberofPages == 0"  style="text-align:center">
+                    <button ng-disabled="currentGuardian == 0" ng-click="currentGuardian=currentGuardian-1" class="btn btn-primary">
+                        Previous
+                    </button>
+                    {{currentGuardian+1}}/{{10}}
+                    <button ng-disabled="currentGuardian >= 9" ng-click="currentGuardian=currentGuardian+1"  class="btn btn-primary">
+                        Next
+                    </button>
+                </div>
+                <div ng-repeat="(id, news) in guardianNews" ng-show="id==currentGuardian">
+                  <h4>{{news.headline}}</h4>
+                  <span ng-bind-html="news.body"></span>
+                  <p><a href="{{news.webUrl}}" target="_blank">Published {{getTimeago(news.webPublicationDate)}}</a></p>
+                </div>
+                  
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                </div><!-- box-footer -->
+            </div><!-- /.box -->
+        </div>
+
+        <div class="col-md-12"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Time Series</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <canvas id="line" class="chart chart-line" chart-data="linedata" chart-labels="linelabels" 
+                    chart-legend="true" chart-series="series" chart-click="onClick"></canvas> <!-- chart-series="lineseries" -->
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                    <!-- The footer of the box -->
+                </div><!-- box-footer -->
+            </div><!-- /.box -->
+        </div>
+
+        <div class="col-md-12"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Languages</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <canvas id="pie" class="chart chart-pie"
+                    chart-data="piedata" chart-labels="pielabels" chart-click="onClick">
+                </canvas> 
+            </div><!-- /.box-body -->
+            <div class="box-footer">
+                <!-- The footer of the box -->
+            </div><!-- box-footer -->
+        </div><!-- /.box -->
+    </div>
+
+    <div class="col-md-12"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Source</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <canvas id="bar" class="chart chart-bar" chart-data="bardata" chart-labels="barlabels"></canvas> 
+            </div><!-- /.box-body -->
+            <div class="box-footer">
+                <!-- The footer of the box -->
+            </div><!-- box-footer -->
+        </div><!-- /.box -->
+    </div>
+
+    <div class="col-md-12"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Top Entities</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <jqcloud words="words" width="400" height="500" steps="7" delay="50"></jqcloud>
+            </div><!-- /.box-body -->
+            <div class="box-footer">
+                <!-- The footer of the box -->
+            </div><!-- box-footer -->
+        </div><!-- /.box -->
+    </div>
+
+    <div class="col-md-12"> 
+            <div class="box" ng-show="searchFlag">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Sentiment Analysis</h3>
+                    <div class="box-tools pull-right">
+                        <!-- Buttons, labels, and many other things can be placed here! -->
+                        <!-- Here is a label for example -->
+                        <!-- <span class="label label-primary">Label</span> -->
+                    </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <canvas id="pie2" class="chart chart-pie"
+                    chart-data="sentdata" chart-labels="sentlabels">
+                </canvas> 
+            </div><!-- /.box-body -->
+            <div class="box-footer">
+                <!-- The footer of the box -->
+            </div><!-- box-footer -->
+        </div><!-- /.box -->
+    </div>
+
+</div>
+</div>
+</section>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Main Footer -->
+<footer class="main-footer">
+    <!-- To the right -->
+    <div class="pull-right hidden-xs">
+      <!-- Anything you want -->
+  </div>
+  <!-- Default to the left -->
+  <strong>Copyright &copy; 2015 <a href="#"> Falcons Inc</a>.</strong> All rights reserved.
+</footer>
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+      <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane active" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">Recent Activity</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript::;">
+              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+
+                <p>Will be 23 on April 24th</p>
+            </div>
+        </a>
+    </li>
+</ul>
+<!-- /.control-sidebar-menu -->
+
+<h3 class="control-sidebar-heading">Tasks Progress</h3>
+<ul class="control-sidebar-menu">
+  <li>
+    <a href="javascript::;">
+      <h4 class="control-sidebar-subheading">
+        Custom Template Design
+        <span class="label label-danger pull-right">70%</span>
+    </h4>
+
+    <div class="progress progress-xxs">
+        <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+    </div>
+</a>
+</li>
+</ul>
+<!-- /.control-sidebar-menu -->
+
+</div>
+<!-- /.tab-pane -->
+<!-- Stats tab content -->
+<div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+<!-- /.tab-pane -->
+<!-- Settings tab content -->
+<div class="tab-pane" id="control-sidebar-settings-tab">
+    <form method="post">
+      <h3 class="control-sidebar-heading">General Settings</h3>
+
+      <div class="form-group">
+        <label class="control-sidebar-subheading">
+          Report panel usage
+          <input type="checkbox" class="pull-right" checked>
+      </label>
+
+      <p>
+          Some information about this general settings option
+      </p>
+  </div>
+  <!-- /.form-group -->
+</form>
+</div>
+<!-- /.tab-pane -->
+</div>
+</aside>
+<!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+  immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
